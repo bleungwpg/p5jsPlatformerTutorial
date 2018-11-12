@@ -4,6 +4,7 @@ var playerX;
 var playerY;
 var jump;
 var jumpCounter;
+var falling;
 
 
 function preload()
@@ -17,6 +18,8 @@ function setup()
 
 	playerX = 30;
 	playerY = 180;
+
+	falling = false;
 
 	jump = false;
 	jumpCounter = 0;
@@ -72,14 +75,13 @@ function draw()
 		rect(platforms[0][c],platforms[1][c],75,25);
 
 		// this affects the speed of movement
-		platforms[0][c] -= 5;
+		platforms[0][c] -= 1;
 	}		
 
 	// draw player
 	fill(255,0,0);
 	ellipse(playerX,playerY,10,10);
 
-	playerOnPlatform();
 
 	// character jump
 	if (jump == true)
@@ -94,31 +96,34 @@ function draw()
 			if (playerY < 150)
 			{
 				jumpCounter = 1;
-			}
-		}
-		// down movement
-		else if (jumpCounter == 1)
-		{
-			// rate of down movement
-			playerY += 3;
-
-			// falling back down
-			if (playerY > 180)
-			{
-				jumpCounter = 0;
-				playerY = 180;
 				jump = false;
-			}			
+				falling = true;
+			}
 		}
 	}
 
+	if (falling == true)
+	{
+		// rate of down movement
+		playerY += 3;
+		playerOnPlatform();	
+	}
 
 }
 
 
 function playerOnPlatform()
 {
-//	if (playerY)
+	// check if character is on platform
+	for (var c = 0; c < 10; c++)
+	{
+		if (playerY > platforms[1][c] && playerY < (platforms[1][c] + 10) && playerX > platforms[0][c] && playerX < platforms[0][c] + 75)
+		{
+			playerY = platforms[1][c] - 5;
+			jumpCounter = 0;
+			break;
+		}
+	}
 }
 
 function keyPressed()
@@ -126,6 +131,7 @@ function keyPressed()
 	if (key == 'w' || key == 'W')
 	{
 		jump = true;
+		falling = false;
 	}
 }
 

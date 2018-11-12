@@ -22,7 +22,7 @@ function setup()
 
 	falling = true;
 
-	jump = false;
+	jump = 0;
 	jumpCounter = 0;
 
 
@@ -85,7 +85,7 @@ function draw()
 
 
 	// character jump
-	if (jump == true)
+	if (jump == 1)
 	{
 		// up movement
 		if (jumpCounter == 0)
@@ -102,9 +102,8 @@ function draw()
 			// maximum jump height
 			if (playerY < maxHeight)
 			{
-				jumpCounter = 1;
-				jump = false;
 				falling = true;
+				jump = 2;
 			}
 		}
 	}
@@ -124,9 +123,10 @@ function playerOnPlatform()
 	// check if character is on platform
 	for (var c = 0; c < 10; c++)
 	{
-		if (playerY > platforms[1][c] && playerY < (platforms[1][c] + 10) && playerX > platforms[0][c] && playerX < platforms[0][c] + 75)
+		if (playerY > platforms[1][c] - 5 && playerY < (platforms[1][c] + 5) && playerX > platforms[0][c] && playerX < platforms[0][c] + 75)
 		{
 			playerY = platforms[1][c] - 5;
+			jump = 0;
 			jumpCounter = 0;
 			break;
 		}
@@ -135,9 +135,9 @@ function playerOnPlatform()
 
 function keyPressed()
 {
-	if (key == 'w' || key == 'W' && jump == false && playerY < 210)
+	if (key == 'w' || key == 'W' && jump == 0 && playerY < 210)
 	{
-		jump = true;
+		jump = 1;
 		falling = false;
 	}
 }

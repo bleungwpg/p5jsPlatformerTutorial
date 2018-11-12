@@ -5,6 +5,7 @@ var playerY;
 var jump;
 var jumpCounter;
 var falling;
+var maxHeight;
 
 
 function preload()
@@ -19,7 +20,7 @@ function setup()
 	playerX = 30;
 	playerY = 180;
 
-	falling = false;
+	falling = true;
 
 	jump = false;
 	jumpCounter = 0;
@@ -75,7 +76,7 @@ function draw()
 		rect(platforms[0][c],platforms[1][c],75,25);
 
 		// this affects the speed of movement
-		platforms[0][c] -= 1;
+		platforms[0][c] -= 2;
 	}		
 
 	// draw player
@@ -89,11 +90,17 @@ function draw()
 		// up movement
 		if (jumpCounter == 0)
 		{
+			maxHeight = playerY - 50;
+			jumpCounter = 1;
+		}
+
+		if (jumpCounter == 1)
+		{
 			// rate of up movement
 			playerY -= 5;
 
 			// maximum jump height
-			if (playerY < 150)
+			if (playerY < maxHeight)
 			{
 				jumpCounter = 1;
 				jump = false;
@@ -128,7 +135,7 @@ function playerOnPlatform()
 
 function keyPressed()
 {
-	if (key == 'w' || key == 'W')
+	if (key == 'w' || key == 'W' && jump == false && playerY < 210)
 	{
 		jump = true;
 		falling = false;

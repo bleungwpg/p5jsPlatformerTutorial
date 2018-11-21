@@ -21,13 +21,19 @@ function draw()
 	{
 		background(0,0,0);
 		showControls();
-		drawWorld();		
+		drawWorld(0);		
 	}
 	else if (canvasID == 2)
 	{
-		background(125,125,125);
-		fill(255,255,255);
-		text("next question",50,50);		
+		background(100,0,0);
+		showControls();
+		drawWorld(1);		
+	}
+	else
+	{
+		background(0,100,0);
+		showControls();
+		drawWorld(0);
 	}
 }
 

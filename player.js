@@ -22,7 +22,7 @@ function preloadPlatforms()
 function setupPlayer()
 {
 	// setup player variables
-	playerX = 30;
+	playerX = 130;
 	playerY = 180;
 
 	// left and right movement speed of player
@@ -73,11 +73,11 @@ function manageMoveLR()
 
 }
 
-function playerTouchTop()
+function playerTouchTop(questionID)
 {
 	for (var c = 0; c < maxPlatforms; c++)
 	{
-		if (platforms[c][4] == 1 && platforms[c][6] == 1)
+		if ((platforms[c][4] == 1 || platforms[c][4]) && platforms[c][6] == 1 && platforms[c][7] == questionID)
 		{
 			if (playerY > platforms[c][1] + platforms[c][3] - 5 && playerY < (platforms[c][1] + platforms[c][3] + 5) && playerX > platforms[c][0] && playerX < platforms[c][0] + platforms[c][2])
 			{
@@ -97,6 +97,31 @@ function playerTouchTop()
 	return false;
 }
 
+function manageWalkIntoWall(questionID)
+{
+	// check if character is walking into a wall
+	for (var c = 0; c < maxPlatforms; c++)
+	{
+		if (platforms[c][4] == 4 && platforms[c][6] == 1 && platforms[c][7] == questionID)
+		{
+			if (playerY > platforms[c][1] - 5 && playerY < (platforms[c][1] + platforms[c][3] + 5) && playerX > platforms[c][0] - 5 && playerX < platforms[c][0] + 5)
+			{
+				fill(255,255,255);
+				text("wall detection",400,50);
+				playerX = platforms[c][0] - 5;
+				break;
+			}
+			else if (playerY > platforms[c][1] - 5 && playerY < platforms[c][1] + platforms[c][3] + 5 && playerX > platforms[c][0] + platforms[c][2] - 5 && playerX < platforms[c][0] + platforms[c][2] + 5)
+			{
+				fill(255,255,255);
+				text("wall detection",400,50);
+				playerX = platforms[c][0] + platforms[c][2] + 5;
+				break;				
+			}
+		}
+	}
+}
+
 function initiateNextQuestion()
 {
 	if (goToNextQuestion == true)
@@ -112,12 +137,16 @@ function initiateNextQuestion()
 			{
 				prepAnimation = 0;
 				canvasID++;
+				goToNextQuestion = false;
+				playerY = 20;
+				playerX = 100;
+
 			}
 		}
 	}
 }
 
-function manageJumpAndFall()
+function manageJumpAndFall(questionID)
 {
 	// character jump
 	if (jump == 1)
@@ -136,7 +165,7 @@ function manageJumpAndFall()
 
 
 			// maximum jump height
-			if (playerY < maxHeight || playerTouchTop())
+			if (playerY < maxHeight || playerTouchTop(questionID))
 			{
 				falling = true;
 				jump = 2;
@@ -148,16 +177,16 @@ function manageJumpAndFall()
 	{
 		// rate of down movement
 		playerY += 3;
-		playerOnPlatform();	
+		playerOnPlatform(questionID);	
 	}
 }
 
-function playerOnPlatform()
+function playerOnPlatform(questionID)
 {
 	// check if character is on platform
 	for (var c = 0; c < maxPlatforms; c++)
 	{
-		if ((platforms[c][4] == 0 || platforms[c][4] == 1) && platforms[c][6] == 1)
+		if ((platforms[c][4] == 0 || platforms[c][4] == 1 || platforms[c][4] == 4) && platforms[c][6] == 1 && platforms[c][7] == questionID)
 		{
 			if (playerY > platforms[c][1] - 5 && playerY < (platforms[c][1] + 5) && playerX > platforms[c][0] && playerX < platforms[c][0] + platforms[c][2])
 			{
